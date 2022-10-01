@@ -3,11 +3,12 @@ const { readClasse, readOptions, readAgent,
     readAnnee, readEleves, readAgentById, readCoursParEnseignant, CoursParMax, readPeriode, 
     readEleveByClasse, readAnneeActive, ReadCoursInnocuper, readCotationEleve,ReadCoursParUnEleve, readCours, readTableStudentInitiale, readEleveEnOrdre
 } = require("../Controlers/Read")
-const { Branche, CotationEleve, ResultatClasse } = require("../Controlers/Bulletin")
+const { Branche, CotationEleve, ResultatClasse, BulletinSeptieme } = require("../Controlers/Bulletin")
 const { Session } = require("../Controlers/Session")
 const { retournUserId } = require("../Controlers/Login")
 const { changeCote, AfficherEleveCoter, AfficherSessionClasse } = require("../Controlers/Cotation")
 const { ReadUser } = require("../Controlers/Login")
+const { readCoursDomaine, readDomaine, readSousDomaine } = require("../Controlers/Domaine")
 
 const router = express.Router();
 router.get("/classe", readClasse)
@@ -36,6 +37,10 @@ router.get("/afficher/:codeClasse", AfficherEleveCoter)
 router.get("/coursinnocuper", ReadCoursInnocuper)
 router.get("/resultataclasse/:codeClasse", ResultatClasse)
 router.get("/sessionclasse/:codeClasse", AfficherSessionClasse)
+router.get("/domaineCours/:codeClasse", readCoursDomaine)
+router.get("/readDomaine/:codeClasse", readDomaine)
+router.get("/readsousdomaine/:codeClasse", readSousDomaine)
+router.get("/readBulletinSeptieme/:codeEleve", BulletinSeptieme)
 
 router.post("/test", changeCote)
 

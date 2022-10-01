@@ -6,7 +6,7 @@ module.exports = {
     Cours : (req, res)=>{
         try {
             const { branche, maxima } = req.body.valeur
-            const { classe, validExamen } = req.body
+            const { classe, validExamen, identifiant, } = req.body
 
             
             if(isEmpty(branche)|| isEmpty(maxima) || isEmpty(classe)){
@@ -16,7 +16,6 @@ module.exports = {
                 })
             }
             
-
             modelCours.findOne({
                 branche : branche,
                 classe : classe
@@ -34,7 +33,7 @@ module.exports = {
                                 branche, maxima, classe, 
                                 id : coursFound.length + 1,
                                 idCours : coursFound.length + 2, 
-                                validExamen
+                                validExamen, identifiant
                             }).then((Save)=>{
                                 if(Save){
                                     return res.status(200).json({

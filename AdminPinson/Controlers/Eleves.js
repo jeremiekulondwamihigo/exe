@@ -9,7 +9,7 @@ const { isEmpty } = require("../Utils/Functions")
 module.exports = {
     EnregistrementEleve : function(req, res){
         try {
-            const {  nomComplet, dateNaiss, lieuNaissance } = req.body.valeur
+            const {  nomComplet, dateNaiss, lieuNaissance, contactTiteur } = req.body.valeur
             const { sexe, id, classe } = req.body
             
             if(isEmpty(nomComplet) || isEmpty(sexe)){
@@ -38,7 +38,7 @@ module.exports = {
                                     
                                     eleveTable.create({
                                         sexe, nomComplet,
-                                        dateNaiss, codeEleve, id, lieuNaissance
+                                        dateNaiss, codeEleve, id, lieuNaissance, contactTiteur
                                     }).then(function(newEleve){
                                         done(null, newEleve)
                                     }).catch(function(error){

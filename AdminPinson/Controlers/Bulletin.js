@@ -5,6 +5,7 @@ const modelPeriode = require("../Models/Periode")
 const { isEmpty } = require("../Utils/Functions")
 const asyncLab = require("async")
 const ModelEleve = require("../Models/EleveInscrits")
+const { response } = require("express")
 
 module.exports = {
 
@@ -190,11 +191,6 @@ module.exports = {
                                             
                             })
                             
-                            
-                        
-                      
-                            
-                
         } catch (error) {
             console.log(error)
         }
@@ -242,5 +238,88 @@ addField = {
 ModelEleve.aggregate([match, lookCotation, addField, lookEleve, sort ]).then(response =>{
     res.send(response)
 })
+    },
+
+
+
+    BulletinSeptieme : (req, res)=>{
+        const { codeEleve } = req.params
+
+
+            let lookCours = {
+                $lookup : {
+                    from :"cours",
+                    localField:"idCours",
+                    foreignField:"idCours",
+                    as : "cours"
+                }
+            }
+            let lookEleve = {
+                $lookup :{
+                    from :"eleves",
+                    localField:"codeEleve",
+                    foreignField:"codeEleve",
+                    as : "eleve"
+                }
+            }
+            
+            let addFieldTotal = {
+                $addFields : {
+                    tot1 : {
+                        $add : ["$premierePeriode", "$deuxiemePeriode", "$examenOne"]
+                    },
+                    tot2 : {
+                        $add : ["$troisiemePeriode", "$quatriemePeriode", "$examenTwo"]
+                    },
+                    totGen : {
+                        $add : [
+                            "$premierePeriode", "$deuxiemePeriode", "$examenOne", 
+                            "$troisiemePeriode", "$quatriemePeriode", "$examenTwo"
+                        ]
+                    }
+                }
+            }
+            lookPlace = {
+                $lookup : {
+                    from : "places",
+                    localField: "codeEleve",
+                    foreignField : "codeEleve",
+                    as : "place"
+                }
+            }
+                
+            let match = { $match : { codeEleve : codeEleve  } }
+
+            asyncLab.waterfall([
+                function(done){
+                    modelCotation.aggregate([ match, lookCours, addFieldTotal, lookEleve, lookPlace ]).then( response =>{
+                       
+                        let tableau = {}
+                                            
+                        for(let i=0; i< response.length; i++){
+                            tableau.premiere = (tableau.premiere ? tableau.premiere : 0) + response[i].premierePeriode
+                            tableau.deuxieme = (tableau.deuxieme ? tableau.deuxieme : 0) + response[i].deuxiemePeriode
+                            tableau.examenOne = (tableau.examenOne ? tableau.examenOne : 0) + response[i].examenOne
+                            tableau.totalOne = tableau.premiere + tableau.deuxieme + tableau.examenOne
+                            tableau.troisieme = (tableau.troisieme ? tableau.troisieme : 0) + response[i].troisiemePeriode
+                            tableau.quatrieme = (tableau.quatrieme ? tableau.quatrieme : 0) + response[i].quatriemePeriode
+                            tableau.examenTwo = (tableau.examenTwo ? tableau.examenTwo : 0) + response[i].examenTwo
+                            tableau.totalTwo = tableau.totalOne + tableau.troisieme + tableau.quatrieme + tableau.examenTwo
+                            tableau.totalGen = tableau.totalTwo + tableau.totalOne
+                        }
+                        done(response, tableau)
+                             
+                    })
+                },
+                
+            ], function(response, tableau){
+                return res.status(200).json({
+                    response, tableau
+                })
+                
+            })
+            
+    
+
     }
 }

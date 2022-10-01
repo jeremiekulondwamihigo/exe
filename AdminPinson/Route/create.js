@@ -8,6 +8,7 @@ const { Periode } = require("../Controlers/Periode")
 const { Cotation, multipleCote, CotationOther } = require("../Controlers/Cotation")
 const { Place } = require("../Controlers/Place")
 const { Registered, Login } = require("../Controlers/Login")
+const { Ajouter_Domaine, AjouterSousDomaine } = require("../Controlers/Domaine")
  
 
 const router = express.Router();
@@ -26,5 +27,7 @@ router.post("/multipleCote/", multipleCote)
 router.post("/registered", Registered)
 router.post("/cotationOther", CotationOther)
 router.post("/login", Login)
+router.post("/ajouterdomaine", Ajouter_Domaine)
+router.post("/ajoutersousDomaine", AjouterSousDomaine)
 
 module.exports = router

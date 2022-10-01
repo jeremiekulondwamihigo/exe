@@ -43,7 +43,7 @@ module.exports = {
     },
     Classe : function(req, res){
         const { classe, title, } = req.body.initialeValue
-        const { titulaire, id } = req.body;
+        const { titulaire, id, auth_Domaine } = req.body;
 
          let codeClasse = (parseInt(Math.random() * 100000));
    
@@ -85,7 +85,7 @@ module.exports = {
                 }, function(ClasseFound, done){
                     if(!ClasseFound){
                         ModelClasse.create({
-                            classe, title, id, titulaire, codeClasse
+                            classe, title, id, titulaire, codeClasse, auth_Domaine
                         }).then(ClasseCreate=>{
                             done(ClasseCreate)
                         }).catch(function(error){

@@ -12,7 +12,6 @@ const accoundID = "ACecfa0fa5f6f77af4d730756ad26d3afa"
 const token = "af4ced60eeb0bc244e3af93c44b19f56"
 const client = new twilio(accoundID, token)
 
-
 const server = express()
 server.use(cors())
 
@@ -52,9 +51,6 @@ server.post("/sms", (req, res)=>{
     res.end()
 })
 
-
-
-
-// server.listen(PORT, function(){
-//     console.log("AdminPinson server running at "+PORT)
-// })
+server.listen(PORT, function(){
+    console.log("AdminPinson server running at "+PORT)
+})
